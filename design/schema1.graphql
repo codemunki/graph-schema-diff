@@ -1,0 +1,10 @@
+type Query {
+  getWeather(location: String!): Weather
+}
+
+type Weather {
+  temperature: Float
+  description: String
+  humidity: Int
+  windSpeed: Float
+}

@@ -1,0 +1,21 @@
+{
+  "changes": [
+    {
+      "type": "Query",
+      "field": "getWeather",
+      "change": "Renamed input parameter 'location' to 'city'",
+      "breaking": true,
+      "release_note": "The input parameter for `getWeather` has been renamed from `location` to `city`. This is a breaking change, so make sure to update any queries that use `location` to `city`."
+    },
+    {
+      "type": "Weather",
+      "field": "visibility",
+      "change": "Added new scalar field 'visibility'",
+      "breaking": false,
+      "release_note": "We've added a new `visibility` field to the `Weather` type. You can now get visibility information in your weather queries without modifying existing ones. This is a non-breaking change."
+    }
+  ],
+  "release_notes": {
+    "summary": "This release introduces a breaking change with the renaming of the `location` parameter to `city` in the `getWeather` query, and a non-breaking enhancement with the addition of a new `visibility` field in the `Weather` type."
+  }
+}
