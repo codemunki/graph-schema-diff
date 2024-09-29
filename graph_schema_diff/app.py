@@ -8,12 +8,19 @@ app = Flask(__name__)
 # Initialize Swagger for automatic API documentation
 swagger = Swagger(app)
 
-# Read model_file and expected_json_path
+# Read model_file, expected_json_path, n_gpu_layers, and n_ctx from environment variables with defaults
 model_file = os.getenv("MODEL_FILE", "models/mixtral-8x7b-instruct-v0.1.Q4_K_M.gguf")
 expected_json_path = os.getenv("EXPECTED_JSON_PATH", "data/expected.json")
+n_gpu_layers = int(os.getenv("N_GPU_LAYERS", 10))
+n_ctx = int(os.getenv("N_CTX", 2048))
 
-# Initialize the comparator with the environment variables or defaults
-comparator = GraphQLComparator(model_file=model_file, expected_json_path=expected_json_path)
+# Initialize the comparator with the model file, expected JSON, GPU layers, and context length
+comparator = GraphQLComparator(
+    model_file=model_file,
+    expected_json_path=expected_json_path,
+    n_gpu_layers=n_gpu_layers,
+    n_ctx=n_ctx
+)
 
 @app.route('/compare', methods=['POST'])
 def compare():
@@ -94,7 +101,7 @@ def get_statistics():
 @app.route('/model-info', methods=['GET'])
 def get_model_info():
     """
-    Get information about the loaded model (path, load time, size).
+    Get information about the loaded model (path, load time, size, GPU layers, context length).
     ---
     responses:
       200:
@@ -107,6 +114,10 @@ def get_model_info():
             model_load_time:
               type: number
             model_size:
+              type: integer
+            n_gpu_layers:
+              type: integer
+            n_ctx:
               type: integer
     """
     model_info = comparator.model_info()
