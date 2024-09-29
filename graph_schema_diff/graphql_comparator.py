@@ -10,7 +10,6 @@ from guidance import models, gen, json as guidance_json
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
 
-
 class GraphQLComparator:
     _instance = None
 
@@ -20,10 +19,12 @@ class GraphQLComparator:
             cls._instance = super(GraphQLComparator, cls).__new__(cls)
         return cls._instance
 
-    def __init__(self, model_file, expected_json_path):
+    def __init__(self, model_file, expected_json_path, context_length=2048):
         if not hasattr(self, 'initialized'):  # Avoid re-initialization in singleton
             # Initialize model parameters
             self.model_file = model_file
+            self.context_length = context_length
+            logger.info(f"Loading json schema: {expected_json_path}")
             self.expected_obj = self._load_expected_json(expected_json_path)
 
             # Statistics tracking
@@ -31,13 +32,15 @@ class GraphQLComparator:
             self.api_calls = 0
             self.breaking_change_count = 0
 
-            # Load model and track load time
-            start_time = time.time()
-            self.model = models.LlamaCpp(self.model_file)
-            self.model_load_time = time.time() - start_time
-
             # Get the size of the model file
             self.model_size = self._get_model_size()
+
+            # Load model and track load time
+            logger.info(f"Loading model: {self.model_file} ({self.model_size}) with context length {self.context_length}")
+            start_time = time.time()
+            self.model = models.LlamaCpp(self.model_file, n_ctx=self.context_length)
+            self.model_load_time = time.time() - start_time
+            logger.info(f"Model load time : {self.model_load_time}")
 
             self.initialized = True
 
@@ -65,7 +68,8 @@ class GraphQLComparator:
         return {
             "model_path": self.model_file,
             "model_load_time": self.model_load_time,
-            "model_size": self.model_size
+            "model_size": self.model_size,
+            "model_nctx": self.context_length
         }
 
     def strip_html_tags(self, text):
@@ -73,13 +77,6 @@ class GraphQLComparator:
         Remove custom HTML-like tags from the text.
         """
         return re.sub(r"<\|\|_html.*?\|\|>", "", text)
-
-    def read_file(self, file_path):
-        """
-        Utility function to read a file's content and return it as a string.
-        """
-        with open(file_path, 'r') as file:
-            return file.read()
 
     def compare(self, schema1: str, schema2: str):
         """
@@ -94,6 +91,7 @@ class GraphQLComparator:
             A dictionary with:
             - status: "success" or "failure"
             - result: the generated JSON object (empty if failure)
+            - error_message: if applicable
         """
         logger.info("Comparing provided GraphQL schemas")
 
@@ -130,11 +128,13 @@ class GraphQLComparator:
             }
 
         except Exception as e:
-            logger.error(f"Error during comparison: {e}")
-            # Return failure status with an empty result
+            error_message = str(e)
+            logger.error(f"Error during comparison: {error_message}")
+            # Return failure status with the error message included
             return {
                 "status": "failure",
-                "result": {}
+                "result": {},
+                "error_message": error_message
             }
 
     def statistics(self):
@@ -168,9 +168,10 @@ if __name__ == "__main__":
     # Environment variables for model file and expected JSON file path
     model_file = os.getenv("MODEL_FILE", "models/mixtral-8x7b-instruct-v0.1.Q4_K_M.gguf")
     expected_json_path = os.getenv("EXPECTED_JSON_PATH", "data/expected.json")
+    context_length = int(os.getenv("CONTEXT_LENGTH", 512))
 
     # Create the comparator instance
-    comparator = GraphQLComparator(model_file=model_file, expected_json_path=expected_json_path)
+    comparator = GraphQLComparator(model_file=model_file, expected_json_path=expected_json_path, context_length=context_length)
 
     # Log model information
     logger.info(f"Model Information: {comparator.model_info()}")
