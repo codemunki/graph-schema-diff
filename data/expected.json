@@ -1,0 +1,47 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "GraphQL Schema Diff",
+  "type": "object",
+  "properties": {
+    "changes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "The GraphQL type where the change occurred (e.g., Query, Mutation, Subscription)."
+          },
+          "field": {
+            "type": "string",
+            "description": "The specific field that was changed."
+          },
+          "change": {
+            "type": "string",
+            "description": "A description of the change (e.g., field renamed, new field added, field removed)."
+          },
+          "breaking": {
+            "type": "boolean",
+            "description": "Indicates whether the change is breaking (true) or non-breaking (false)."
+          },
+          "release_note": {
+            "type": "string",
+            "description": "A natural language description of the change, suitable for release notes."
+          }
+        },
+        "required": ["type", "field", "change", "breaking", "release_note"]
+      }
+    },
+    "release_notes": {
+      "type": "object",
+      "properties": {
+        "summary": {
+          "type": "string",
+          "description": "A summary of all changes in the release, suitable for a mailing list or public announcement."
+        }
+      },
+      "required": ["summary"]
+    }
+  },
+  "required": ["changes", "release_notes"]
+}
