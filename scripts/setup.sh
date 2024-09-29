@@ -16,4 +16,4 @@ CMAKE_ARGS="-DGGML_CUDA=on" pip install llama-cpp-python
 pip install -r requirements.txt
 
 # Download required models (can take some time)
-./models/download-models.sh
+pushd models; ./download-models.sh; popd
