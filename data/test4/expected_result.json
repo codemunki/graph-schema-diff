@@ -1,0 +1,35 @@
+{
+  "changes": [
+    {
+      "type": "Book",
+      "field": "author",
+      "change": "Renamed field 'author' to 'writer'",
+      "breaking": true,
+      "release_note": "The field `author` was renamed to `writer` in the `Book` type. This is a breaking change and any queries using `author` need to be updated to use `writer`."
+    },
+    {
+      "type": "Book",
+      "field": "isbn",
+      "change": "Added new field 'isbn'",
+      "breaking": false,
+      "release_note": "The field `isbn` was added to the `Book` type. This is a non-breaking change, and you can now retrieve the ISBN of books in your queries."
+    },
+    {
+      "type": "Author",
+      "field": "birthdate",
+      "change": "Added new field 'birthdate'",
+      "breaking": false,
+      "release_note": "The field `birthdate` was added to the `Author` type. This is a non-breaking change, and you can now retrieve the birthdate of authors in your queries."
+    },
+    {
+      "type": "Publisher",
+      "field": null,
+      "change": "Added new type 'Publisher' implementing interface 'Entity'",
+      "breaking": false,
+      "release_note": "A new type `Publisher` implementing the `Entity` interface was added. This is a non-breaking change and you can now query information about publishers."
+    }
+  ],
+  "release_notes": {
+    "summary": "This release introduces a breaking change with the renaming of the `author` field to `writer` in the `Book` type. Additionally, new fields `isbn` in `Book` and `birthdate` in `Author` have been added, along with the new `Publisher` type implementing the `Entity` interface."
+  }
+}

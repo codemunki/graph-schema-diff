@@ -1,0 +1,28 @@
+{
+  "changes": [
+    {
+      "type": "Product",
+      "field": "description",
+      "change": "Field 'description' was removed",
+      "breaking": true,
+      "release_note": "The field `description` was removed from the `Product` type. This is a breaking change and any queries that relied on `description` will no longer work."
+    },
+    {
+      "type": "Product",
+      "field": "details",
+      "change": "Renamed field 'description' to 'details'",
+      "breaking": true,
+      "release_note": "The field `description` was renamed to `details` in the `Product` type. This is a breaking change and any queries using `description` need to be updated to use `details`."
+    },
+    {
+      "type": "Product",
+      "field": "stock",
+      "change": "Field 'stock' was removed",
+      "breaking": true,
+      "release_note": "The field `stock` was removed from the `Product` type. This is a breaking change and any queries that relied on `stock` will no longer work."
+    }
+  ],
+  "release_notes": {
+    "summary": "This release introduces breaking changes: the removal of the `description` and `stock` fields from the `Product` type, and the renaming of `description` to `details`. Update your queries accordingly."
+  }
+}

@@ -1,0 +1,16 @@
+type Query {
+  getUser(id: ID!): User
+}
+
+type User {
+  id: ID
+  name: String
+  email: String
+  age: Int
+}
+
+type Address {
+  street: String
+  city: String
+  state: String
+}

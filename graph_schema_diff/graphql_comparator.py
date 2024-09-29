@@ -102,7 +102,34 @@ class GraphQLComparator:
         try:
             # Query the model and track query time
             start_time = time.time()
-            question = "Can you inspect the following graphql schemas and compare them for any breaking changes?"
+            question = """Analyze the following two GraphQL schemas for changes, including both breaking and non-breaking changes.
+
+                        Provide your analysis in the following JSON format:
+                        {
+                          "changes": [
+                            {
+                              "type": "String representing the GraphQL type (e.g., Query, Mutation, Subscription)",
+                              "field": "String representing the specific field that changed",
+                              "change": "String describing the change (e.g., field renamed, new field added, field removed)",
+                              "breaking": "Boolean indicating if the change is breaking (true) or non-breaking (false)",
+                              "release_note": "String with a natural language description of the change for release notes"
+                            }
+                          ],
+                          "release_notes": {
+                              "summary": "String summarizing all changes, suitable for a mailing list or public announcement"
+                          }
+                        }
+
+                        When analyzing, consider the following types of changes:
+                        1. Removing fields or types (breaking)
+                        2. Changing field types (potentially breaking)
+                        3. Adding required fields (breaking)
+                        4. Changing the type of existing arguments (breaking)
+                        5. Adding optional fields (non-breaking)
+                        6. Adding new types (non-breaking)
+                        7. Deprecating fields (non-breaking)
+
+                        Ensure that each change is categorized correctly as breaking or non-breaking."""
             lm = self.model + f"{question}: {schema1}, {schema2}\n"
             lm += "Answer: " + gen(name='answer')
             lm += guidance_json(name="generated_object", schema=self.expected_obj)
@@ -165,8 +192,8 @@ if __name__ == "__main__":
             return file.read()
 
     # Load schemas from files
-    schema1 = load_schema_file("data/schema1.graphql")
-    schema2 = load_schema_file("data/schema2.graphql")
+    schema1 = load_schema_file("data/test1/schema1.graphql")
+    schema2 = load_schema_file("data/test1/schema2.graphql")
 
     # Environment variables for model file, expected JSON file path, and configurations
     model_file = os.getenv("MODEL_FILE", "models/mixtral-8x7b-instruct-v0.1.Q4_K_M.gguf")

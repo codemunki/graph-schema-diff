@@ -1,0 +1,29 @@
+type Query {
+  search(term: String!): SearchResult
+}
+
+union SearchResult = Book | Author
+
+type Book {
+  id: ID
+  title: String
+  writer: Author
+  isbn: String
+}
+
+type Author {
+  id: ID
+  name: String
+  bio: String
+  birthdate: String
+}
+
+interface Entity {
+  id: ID
+}
+
+type Publisher implements Entity {
+  id: ID
+  name: String
+  location: String
+}

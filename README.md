@@ -81,6 +81,30 @@ The `graph-schema-diff` service can be integrated into release pipelines for Gra
 
 This tool can be extended to support other API specifications such as REST, Swagger/OpenAPI, gRPC, and SOAP.
 
+
+## Repository outline
+
+```bash
+.
+├── README.md                      # Project documentation.
+├── data                           # Contains test case directories with GraphQL schemas and expected results.
+│   ├── test1
+│   ├── test2
+│   ├── test3
+│   └── test4
+├── design                         # Additional design resources and example outputs.
+├── graph_schema_diff              # Core application logic including the GraphQL comparator and API.
+│   ├── app.py                     # Flask app exposing GraphQL comparator as a REST API.
+│   ├── graphql_comparator.py       # Main logic for comparing GraphQL schemas.
+│   └── test                       # Unit tests for the GraphQL comparator.
+├── models                         # Directory for model files and scripts.
+│   ├── download-models.sh         # Script to download required models.
+│   └── mixtral-8x7b-instruct-v0.1.Q4_K_M.gguf  # Language model used in the comparator.
+├── requirements.txt               # Python dependencies required for the project.
+├── scripts                        # Helper scripts for interacting with the API and monitoring resources.
+└── setup.py                       # Setup file for Python package installation.
+```
+
 ## Installation & Setup
 
 1. Clone the repository:
@@ -89,12 +113,45 @@ This tool can be extended to support other API specifications such as REST, Swag
    cd graph-schema-diff
    ```
 
-2. Install dependencies:
+2. Run the setup.sh script
    ```bash
-   pip install -r requirements.txt
+   source scripts/setup.sh
    ```
 
-3. Run the tool:
+3. Run the example code for graphql_comparator.py
    ```bash
-   python schema_diff.py --old-schema schema1.graphql --new-schema schema2.graphql
+   python graph_schema_diff/graphql_comparator.py
    ```
+
+4. Run the graph_schema_diff service
+   ```bash
+   python graph_schema_diff/app.py
+   ```
+
+5. Test query examples can be found in the scripts directory:
+   ```bash
+    ./scripts/get_model_info.sh
+    ./scripts/post_compare_request.sh data/test1/schema1.graphql data/test1/schema2.graphql
+    ./scripts/get_statistics.sh
+    ./scripts/get_apidocs.sh
+    ```
+
+## Testing
+
+Unit tests have been implemted using pytest and can be executed using the command below.
+
+   ```bash
+   pytest graph_schema_diff/test/test_graphql_comparator.py
+   ```
+
+These tests can take some time to complete, it is possible to specify a single test by following the example below.
+
+   ```bash
+   pytest graph_schema_diff/test/test_graphql_comparator.py::test_compare_test1
+   ```
+
+## References
+
+1. [LlamaCpp Model](https://github.com/ggerganov/llama.cpp)
+2. [Guidance AI on GitHub](https://github.com/guidance-ai/guidance)
+3. [Guidance Documentation](https://guidance.readthedocs.io/en/latest/index.html)

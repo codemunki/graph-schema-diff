@@ -1,0 +1,17 @@
+type Query {
+  search(term: String!): SearchResult
+}
+
+union SearchResult = Book | Author
+
+type Book {
+  id: ID
+  title: String
+  author: Author
+}
+
+type Author {
+  id: ID
+  name: String
+  bio: String
+}

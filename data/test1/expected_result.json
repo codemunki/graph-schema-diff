@@ -1,0 +1,21 @@
+{
+  "changes": [
+    {
+      "type": "Query",
+      "field": "getWeather",
+      "change": "Renamed input parameter 'location' to 'city'",
+      "breaking": true,
+      "release_note": "The input parameter for `getWeather` has been renamed from `location` to `city`. This is a breaking change."
+    },
+    {
+      "type": "Weather",
+      "field": "visibility",
+      "change": "Added new scalar field 'visibility'",
+      "breaking": false,
+      "release_note": "A new `visibility` field has been added. This is a non-breaking change."
+    }
+  ],
+  "release_notes": {
+    "summary": "This release introduces a breaking change with the renaming of the `location` parameter to `city`, and a non-breaking enhancement with the addition of the `visibility` field."
+  }
+}

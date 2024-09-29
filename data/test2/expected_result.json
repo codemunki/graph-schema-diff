@@ -1,0 +1,21 @@
+{
+  "changes": [
+    {
+      "type": "User",
+      "field": "age",
+      "change": "Added new field 'age' to 'User'",
+      "breaking": false,
+      "release_note": "A new field `age` has been added to the `User` type. This is a non-breaking change."
+    },
+    {
+      "type": "Address",
+      "field": null,
+      "change": "Added new type 'Address'",
+      "breaking": false,
+      "release_note": "A new type `Address` has been added. This is a non-breaking change."
+    }
+  ],
+  "release_notes": {
+    "summary": "This release introduces non-breaking changes: the addition of the `age` field to the `User` type and the introduction of a new `Address` type."
+  }
+}
